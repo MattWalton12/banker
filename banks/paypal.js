@@ -19,7 +19,7 @@ exports.methods.authenticate = function(horseman, details, cb) {
 		.value("#email", details.email)
 		.value("#password", details.password)
 		.click("#btnLogin")
-		.waitForNextPage()
+		.waitForSelector(".balanceNumeral")
 		.url()
 		.then(function(pageUrl) {
 			if (horseman.exists(".balanceNumeral")) {
