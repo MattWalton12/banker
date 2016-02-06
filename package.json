@@ -1,0 +1,22 @@
+{
+  "name": "banker",
+  "version": "1.0.0",
+  "description": "A collection of bank scraping scripts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MattWalton12/banker.git"
+  },
+  "author": "Matt Walton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MattWalton12/banker/issues"
+  },
+  "homepage": "https://github.com/MattWalton12/banker#readme",
+  "dependencies": {
+    "node-horseman": "^2.8.2"
+  }
+}
