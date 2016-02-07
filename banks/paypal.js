@@ -60,9 +60,10 @@ exports.methods.withdraw = function(horseman, amount, account, cb) {
 				horseman.open(exports.mainPage);
 			}
 		})
-		.then(function() {
+		.text("#show_cc_balance")
+		.then(function(text) {
 			if (!amount) {
-				amount = parseFloat(horseman.text().split(" ")[0].substr(1));
+				amount = parseFloat(text.split(" ")[0].substr(1));
 			}
 
 			horseman.click("#classicWithdrawFunds")
