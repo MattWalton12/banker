@@ -54,31 +54,47 @@ exports.methods.getAccounts = function(horseman, cb) {
 
 exports.methods.withdraw = function(horseman, amount, account, cb) {
 	horseman.userAgent("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36")
-		.open(exports.mainPage)
-		.click("#classicWithdrawFunds")
-		.waitForNextPage()
-		.value("#amount", amount)
-		.evaluate(function(accountNumber) {
-			$("#arch_id option").each(function() {
-				if ($(this).text().indexOf(accountNumber) != -1) {
-					$(this).attr("selected", true);
-				}
-			})
-		})
-		.click("input[value=Continue]")
-		.waitForNextPage()
-		.then(function() {
-			if (horseman.exists("#submitButton")) {
-				horseman.click("#submitButton")
-				.waitForNextPage()
-				.then(function() {
-					cb(null)
-				});
-			} else {
-				var error = $(".error p");
-				cb(new Error(error))
+		.url()
+		.then(function(url) {
+			if (url != exports.mainPage) {
+				horseman.open(exports.mainPage);
 			}
 		})
+		.then(function() {
+			if (!amount) {
+				amount = parseFloat(horseman.text().split(" ")[0].substr(1));
+			}
+
+			horseman.click("#classicWithdrawFunds")
+			.waitForNextPage()
+
+			.value("#amount", amount)
+			.injectJs(__dirname + "/../jquery.min.js")
+			.wait(300)
+			.evaluate(function(accountNumber) {
+				$("#arch_id option").each(function() {
+					console.log($(this).text(), $(this).text().indexOf(accountNumber))
+					if ($(this).text().indexOf(accountNumber) != -1) {
+						$(this).attr("selected", true);
+					}
+				})
+			})
+			.click("input[value=Continue]")
+			.waitForNextPage()
+			.then(function() {
+				if (horseman.exists("#submitButton")) {
+					horseman.click("#submitButton")
+					.waitForNextPage()
+					.then(function() {
+						cb(null)
+					});
+				} else {
+					var error = $(".error p");
+					cb(new Error(error))
+				}
+			});
+		})
+		
 }
 	
 
