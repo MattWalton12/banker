@@ -60,7 +60,7 @@ exports.methods.withdraw = function(horseman, amount, account, cb) {
 				horseman.open(exports.mainPage);
 			}
 		})
-		.text("#show_cc_balance")
+		.text(".withdrawBank .field")
 		.then(function(text) {
 			if (!amount) {
 				amount = parseFloat(text.split(" ")[0].substr(1));
