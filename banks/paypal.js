@@ -28,9 +28,7 @@ exports.methods.authenticate = function(horseman, details, cb) {
 			} else {
 				cb(new Error("Failed to login - check credentials"))
 			}
-		})
-		.screenshot("1.png");
-		
+		});		
 }
 
 exports.methods.getAccounts = function(horseman, cb) {
@@ -61,40 +59,35 @@ exports.methods.withdraw = function(horseman, amount, account, cb) {
 			}
 		})
 		.text(".withdrawBank .field")
-		.then(function(text) {
-			if (!amount) {
-				amount = parseFloat(text.split(" ")[0].substr(1));
-			}
+		.click("#classicWithdrawFunds")
+		.waitForNextPage()
 
-			horseman.click("#classicWithdrawFunds")
-			.waitForNextPage()
-
-			.value("#amount", amount)
-			.injectJs(__dirname + "/../jquery.min.js")
-			.wait(300)
-			.evaluate(function(accountNumber) {
-				$("#arch_id option").each(function() {
-					console.log($(this).text(), $(this).text().indexOf(accountNumber))
-					if ($(this).text().indexOf(accountNumber) != -1) {
-						$(this).attr("selected", true);
-					}
-				})
-			})
-			.click("input[value=Continue]")
-			.waitForNextPage()
-			.then(function() {
-				if (horseman.exists("#submitButton")) {
-					horseman.click("#submitButton")
-					.waitForNextPage()
-					.then(function() {
-						cb(null)
-					});
-				} else {
-					var error = $(".error p");
-					cb(new Error(error))
+		.value("#amount", amount)
+		.injectJs(__dirname + "/../jquery.min.js")
+		.evaluate(function(accountNumber) {
+			$("#arch_id option").each(function() {
+				console.log($(this).text(), $(this).text().indexOf(accountNumber))
+				if ($(this).text().indexOf(accountNumber) != -1) {
+					$(this).attr("selected", true);
 				}
-			});
+			})
 		})
+
+		.wait(300)
+		.click("input[value=Continue]")
+		.waitForNextPage()
+		.then(function() {
+			if (horseman.exists("#submitButton")) {
+				horseman.click("#submitButton")
+				.waitForNextPage()
+				.then(function() {
+					cb(null)
+				});
+			} else {
+				var error = $(".error p");
+				cb(new Error(error))
+			}
+		});
 		
 }
 	
